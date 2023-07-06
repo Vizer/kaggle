@@ -8,31 +8,33 @@ def load_competition_data(
       kaggle_json_path='/content/drive/MyDrive/Docs/kaggle/kaggle.json'):
     import shutil
     import os
-    import kaggle
     import zipfile 
     from google.colab import drive
     from pathlib import Path
+
+    KAGGLE_DESTINATION = "/root/.kaggle"
+    KAGGLE_JSON_DESTINATION = f"{KAGGLE_DESTINATION}/kaggle.json"
+    DATA_DESTINATION = f'/content/{competition}'
     
     data_path = Path(f"{competition}.zip")
 
     if data_path.is_file():
-      print('Kaggle competition data ise already availabel at', data_path.absolute())
+      print('Kaggle competition data is already available at', data_path.absolute())
       return None
 
-    drive.mount(drive_path)
+    drive.mount(drive_path, readonly=True)
 
-    Path("/root/.kaggle").mkdir(parents=True, exist_ok=True)
+    Path(KAGGLE_DESTINATION).mkdir(parents=True, exist_ok=True)
 
-    shutil.copy(kaggle_json_path, '/root/.kaggle/kaggle.json')
+    shutil.copy(kaggle_json_path, KAGGLE_JSON_DESTINATION)
 
-    os.chmod('/root/.kaggle/kaggle.json', 600);
+    os.chmod(KAGGLE_JSON_DESTINATION, 600);
 
-    
+    import kaggle
     kaggle.api.competition_download_cli(competition)
 
-
     with zipfile.ZipFile(data_path, 'r') as zip_ref:
-      zip_ref.extractall(f'/content/{competition}')
+      zip_ref.extractall(DATA_DESTINATION)
 
     drive.flush_and_unmount()
 
