@@ -1,5 +1,6 @@
 # https://www.analyticsvidhya.com/blog/2021/06/how-to-load-kaggle-datasets-directly-into-google-colab/
 # https://www.youtube.com/watch?v=yEXkEUqK52Q
+# https://www.kaggle.com/discussions/general/74235
 
 def load_competition_data(
       competition, 
